@@ -1,0 +1,75 @@
+#
+# This is free software, lisence use MIT.
+# 
+# Copyright (C) 2020 KFERMercer <KFER.Mercer@gmail.com>
+# 
+# <https://github.com/KFERMercer/OpenWrt-CI>
+#
+
+name: Update-minisign
+
+on:
+  workflow_dispatch: # 手动触发
+  schedule:
+    - cron: 50 00 * * *
+
+jobs:
+
+  prepare:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        ref: master
+        fetch-depth: 0
+        lfs: true
+
+    - name: Set git identity
+      run : |
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
+
+    - name: Load latest minisign
+      run: |
+        git clone https://github.com/peter-tank/openwrt-minisign.git --depth=1 ./tmp/minisign
+        rm ./tmp/minisign/README.md
+        rm ./tmp/minisign/.gitignore
+        rm ./tmp/minisign/LICENSE
+        mv ./tmp/minisign/.git ./tmp/
+        cp -rf ./tmp/minisign ./utils/
+
+
+    - name: Apply commit changes
+      run: |
+        git add ./utils/minisign/
+        echo -e "[bot] minisign: update\n\nlatest commit: $(cat ./tmp/.git/refs/heads/master)" > ./tmp/message
+        git commit --file="./tmp/message" --author "peter-tank <30540412+peter-tank@users.noreply.github.com>" || exit 0
+
+    - name: Push Commits
+      env:
+        DOWNSTREAM_BRANCH: master
+      run: git push origin $DOWNSTREAM_BRANCH
+
+  Cleanup-Old-Artifacts:
+    needs: [prepare]
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Cleanup Old Action Artifacts
+      uses: kolpav/purge-artifacts-action@v1
+      with:
+        token: ${{ github.token }}
+        expire-in: 1d
+  Cleanup-Workflow-Runs:
+    needs: Cleanup-Old-Artifacts
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Cleanup Workflow Runs
+        uses: GitRML/delete-workflow-runs@v1.2.1
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 1
