@@ -6,21 +6,21 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=node
 
-ifeq ($(CONFIG_NODEJS_10),y)
-PKG_VERSION:=v10.24.0
+ifeq ($(CONFIG_NODEJS_16),y)
+PKG_VERSION:=v16.1.0
 PKG_RELEASE:=1
-PKG_HASH:=158273af66f891b2fca90aec7336c42f7574f467affad02c14e80ca163cb3acc
-PATCH_DIR:=./patches/v10.x
+PKG_HASH:=a0a9230f92c1f1757e63fd1c17cc1a3db63c1d7ef6c1ba1ed4951cc32b02087c
+PATCH_DIR:=./patches/v16.x
 else
 ifeq ($(CONFIG_NODEJS_14),y)
-PKG_VERSION:=v14.16.0
+PKG_VERSION:=v14.17.0
 PKG_RELEASE:=1
-PKG_HASH:=4e7648a617f79b459d583f7dbdd31fbbac5b846d41598f3b54331a5b6115dfa6
+PKG_HASH:=56e05bff9331039317db417f772e635e0cd1c55f733f7b1b079d71ab5842c9ed
 PATCH_DIR:=./patches/v14.x
 else
-PKG_VERSION:=v12.21.0
-PKG_RELEASE:=1
-PKG_HASH:=052f37ace6f569b513b5a1154b2a45d3c4d8b07d7d7c807b79f1566db61e979d
+PKG_VERSION:=v12.22.1
+PKG_RELEASE:=2
+PKG_HASH:=dd650df7773a6ed3e390320ba51ef33cba6499f0e9397709ea3d1debdcbcb989
 PATCH_DIR:=./patches/v12.x
 endif
 endif
@@ -64,7 +64,7 @@ define Package/node/description
    package ecosystem, npm, is the largest ecosystem of open source libraries in the world.
 
   *** The following preparations must be made on the host side. ***
-      1. gcc 6.3 or higher is required.
+      1. gcc 8.3 or higher is required.
       2. To build a 32-bit target, gcc-multilib, g++-multilib are required.
       3. Requires libatomic package. (If necessary, install the 32-bit library at the same time.)
      ex) sudo apt-get install gcc-multilib g++-multilib
@@ -89,18 +89,18 @@ define Package/node/config
 
 	choice
 		prompt "Version Selection"
-		default NODEJS_12
+		default NODEJS_14
 		help
 		 Select node.js version.
-
-		config NODEJS_10
-			bool "10.x Maintenance LTS"
 
 		config NODEJS_12
 			bool "12.x Maintenance LTS"
 
 		config NODEJS_14
 			bool "14.x Active LTS"
+
+		config NODEJS_16
+			bool "16.x Current"
 	endchoice
 
 	choice
@@ -124,10 +124,6 @@ define Package/node/config
 endef
 
 NODEJS_CPU:=$(subst aarch64,arm64,$(subst x86_64,x64,$(subst i386,ia32,$(ARCH))))
-
-ifeq ($(CONFIG_NODEJS_10),y)
-TARGET_LDFLAGS+=-latomic
-endif
 
 ifneq ($(CONFIG_ARCH_64BIT),y)
 FORCE_32BIT:=-m32

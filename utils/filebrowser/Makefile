@@ -63,7 +63,7 @@ endef
 
 ifeq ($(CONFIG_FILEBROWSER_COMPRESS_GOPROXY),y)
 export GO111MODULE=on
-export GOPROXY=https://goproxy.io
+export GOPROXY=https://goproxy.baidu.com
 endif
 
 define Build/Compile
@@ -72,8 +72,8 @@ define Build/Compile
   npm ci; \
   npm run lint ; \
   npm run build ; \
-  $(call GoPackage/Build/Compile) ; \
 )
+	$(call GoPackage/Build/Compile)
 ifeq ($(CONFIG_FILEBROWSER_COMPRESS_UPX),y)
 	$(STAGING_DIR_HOST)/bin/upx --lzma --best $(GO_PKG_BUILD_BIN_DIR)/filebrowser
 endif

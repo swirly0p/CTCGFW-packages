@@ -11,12 +11,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=v2ray-plugin
-PKG_VERSION:=4.36.2
-PKG_RELEASE:=1
+PKG_VERSION:=4.38.3
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/teddysun/v2ray-plugin/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=70cf85958a5233c8798990f4b7de57ce6f2e9a4535345260df06a4962a21e85a
+PKG_HASH:=b50a6c3eba3ef735b8b7f6a173781210452200dc70a2b11c0d22c95e5ab3b3ae
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
@@ -47,9 +47,9 @@ config V2RAY_PLUGIN_COMPRESS_UPX
 	default y
 endef
 
-ifeq ($(CONFIG_GOWEBDAV_COMPRESS_GOPROXY),y)
+ifeq ($(CONFIG_V2RAY_PLUGIN_COMPRESS_GOPROXY),y)
 	export GO111MODULE=on
-	export GOPROXY=https://goproxy.io
+	export GOPROXY=https://goproxy.baidu.com
 endif
 
 define Package/v2ray-plugin

@@ -1,14 +1,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=yq
-PKG_VERSION:=4.6.1
-PKG_RELEASE:=1
+PKG_VERSION:=4.8.0
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/mikefarah/yq/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=a843b90e4e86efa310284823ab6f1249e4ae3c6aa5df4d61c10b0fdc543b267d
+PKG_HASH:=bc95ceacb4857890363d83c234ed6ca225cec385500f09783de6f91a2ca08ea4
 
-PKG_MAINTAINER:=
+PKG_MAINTAINER:=Tianling Shen <cnsztl@immortalwrt.org>
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
 
@@ -50,7 +50,7 @@ endef
 
 ifeq ($(CONFIG_YQ_COMPRESS_GOPROXY),y)
 export GO111MODULE=on
-export GOPROXY=https://goproxy.io
+export GOPROXY=https://goproxy.baidu.com
 endif
 
 define Build/Compile

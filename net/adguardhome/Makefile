@@ -6,13 +6,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=adguardhome
-PKG_VERSION:=0.105.2
+PKG_VERSION:=0.106.2
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/AdguardTeam/AdGuardHome
-PKG_MIRROR_HASH:=c2ca02ef4d91250772567994e4a59962dc4ec559f44771cefba2b0663668fba1
+PKG_MIRROR_HASH:=14bc92941fa72a7d65dd6e561dc153cbbe06d2b95de4b5266671b65d464da7e7
 
 PKG_LICENSE:=GPL-3.0-only
 PKG_LICENSE_FILES:=LICENSE.txt
@@ -29,9 +29,11 @@ PKG_CONFIG_DEPENDS:= \
 GO_PKG:=github.com/AdguardTeam/AdGuardHome
 GO_PKG_BUILD_PKG:=github.com/AdguardTeam/AdGuardHome
 
+AGH_BUILD_TIME:=$(shell date -d @$(SOURCE_DATE_EPOCH) +%FT%TZ%z)
 AGH_VERSION_PKG:=github.com/AdguardTeam/AdGuardHome/internal/version
 GO_PKG_LDFLAGS_X:=$(AGH_VERSION_PKG).channel=release \
 	$(AGH_VERSION_PKG).version=$(PKG_SOURCE_VERSION) \
+	$(AGH_VERSION_PKG).buildtime=$(AGH_BUILD_TIME) \
 	$(AGH_VERSION_PKG).goarm=$(GO_ARM) \
 	$(AGH_VERSION_PKG).gomips=$(GO_MIPS)
 
@@ -46,9 +48,9 @@ define Package/adguardhome
 	DEPENDS:=$(GO_ARCH_DEPENDS) +ca-bundle
 endef
 
-#define Package/adguardhome/conffiles
-#/etc/adguardhome.yaml
-#endef
+define Package/adguardhome/conffiles
+/etc/adguardhome.yaml
+endef
 
 define Package/adguardhome/description
 Free and open source, powerful network-wide ads and trackers blocking DNS server.
@@ -66,7 +68,7 @@ endef
 
 ifeq ($(CONFIG_ADGUARDHOME_COMPRESS_GOPROXY),y)
 export GO111MODULE=on
-export GOPROXY=https://goproxy.io
+export GOPROXY=https://goproxy.baidu.com
 endif
 
 define Build/Compile
