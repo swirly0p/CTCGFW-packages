@@ -5,12 +5,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=v2rayA
-PKG_VERSION:=1.4.4
+PKG_VERSION:=1.5.1
 PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/v2rayA/v2rayA/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=b17a90e4ac426005fae9afe0889e02e3d70152bc90295fabbacfbff3100c1ed5
+PKG_HASH:=232e61b76a03f28ab48cddc314ddf445ea3c625d7983679428a1328e8e84858e
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)/service
 
 PKG_LICENSE:=GPL-3.0-only
@@ -73,8 +73,7 @@ define Build/Compile
 	( \
 		pushd $(PKG_BUILD_DIR)/../gui ; \
 		yarn ; \
-		yarn build ; \
-		$(CP) ../web ../service/server/router/ ; \
+		OUTPUT_DIR=../service/server/router/web yarn build ; \
 		popd ; \
 		$(call GoPackage/Build/Compile) ; \
 	)
