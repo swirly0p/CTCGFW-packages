@@ -1,7 +1,12 @@
 name: Opde Build
 
 on:
+  push:
+    branches:
+      - master
   pull_request:
+    branches:
+      - master
 
 jobs:
   worker:
@@ -25,7 +30,7 @@ jobs:
           echo "Openwrt SDK Dir: $OP_DIR"
           mkdir $OP_DIR
           echo "OP_DIR=$OP_DIR" >> $GITHUB_ENV
-          BRANCH="${GITHUB_BASE_REF#refs/heads/}"
+          BRANCH="master"
           echo "BRANCH=$BRANCH" >> $GITHUB_ENV
           OPDE_VER="${{matrix.target}}_${{matrix.subtarget}}-$BRANCH"
           echo "OPDE_VER=$OPDE_VER" >> $GITHUB_ENV
@@ -97,8 +102,8 @@ jobs:
       - name: Check
         run: |
           ERR_PACKS=$(cat $OP_DIR/.opde/log.out | grep ERROR | grep -v fullconenat || true)
-          echo $ERR_PACKS
-          [[ $errors == "" ]]
+          for i in $ERR_PACKS; do echo $i; done
+          [[ $ERR_PACKS == "" ]]
 
       - name: Prepare upload
         if: always()
@@ -109,12 +114,12 @@ jobs:
       - uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: Log
+          name: Log-${{env.OPDE_VER}}
           path: /tmp/opdelogs
       - uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: Packages
+          name: Packages-${{env.OPDE_VER}}
           path: /tmp/opdebin
       #- name: debug # docker run -it -v $PWD:/openwrt immortalwrt/opde:base bash
       #  uses: mxschmitt/action-tmate@v2
