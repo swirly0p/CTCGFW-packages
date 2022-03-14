@@ -11,18 +11,18 @@
 include $(TOPDIR)/rules.mk
 
 QT5_VERSION_MAJOR_MINOR:=5.15
-QT5_VERSION_PATCH:=2
+QT5_VERSION_PATCH:=3
 
 PKG_NAME:=qt5
 PKG_VERSION:=$(QT5_VERSION_MAJOR_MINOR)$(if $(QT5_VERSION_PATCH),.$(QT5_VERSION_PATCH))
 PKG_RELEASE:=2
 
-PKG_SOURCE:=qt-everywhere-src-$(PKG_VERSION).tar.xz
+PKG_SOURCE:=qt-everywhere-opensource-src-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://mirrors.tencent.com/qt/archive/qt/$(QT5_VERSION_MAJOR_MINOR)/$(PKG_VERSION)/single/ \
 		https://mirrors.tuna.tsinghua.edu.cn/qt/archive/qt/$(QT5_VERSION_MAJOR_MINOR)/$(PKG_VERSION)/single/ \
 		https://mirrors.ustc.edu.cn/qtproject/archive/qt/$(QT5_VERSION_MAJOR_MINOR)/$(PKG_VERSION)/single/ \
 		http://download.qt-project.org/archive/qt/$(QT5_VERSION_MAJOR_MINOR)/$(PKG_VERSION)/single/
-PKG_HASH:=3a530d1b243b5dec00bc54937455471aaa3e56849d2593edb8ded07228202240
+PKG_HASH:=b7412734698a87f4a0ae20751bab32b1b07fdc351476ad8e35328dbe10efdedb
 
 PKG_BUILD_DIR=$(BUILD_DIR)/qt-everywhere-src-$(PKG_VERSION)
 
