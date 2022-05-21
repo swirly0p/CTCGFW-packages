@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dockerd
-PKG_VERSION:=20.10.14
+PKG_VERSION:=20.10.16
 PKG_RELEASE:=$(AUTORELEASE)
 PKG_LICENSE:=Apache-2.0
 PKG_LICENSE_FILES:=LICENSE
@@ -10,8 +10,8 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_GIT_URL:=github.com/moby/moby
 PKG_GIT_REF:=v$(PKG_VERSION)
 PKG_SOURCE_URL:=https://codeload.$(PKG_GIT_URL)/tar.gz/$(PKG_GIT_REF)?
-PKG_HASH:=dbe1ae342351108b7b30232c4bce0559c81ad9fb6c978d7c8425d6aa53e476c1
-PKG_GIT_SHORT_COMMIT:=87a90dc # SHA1 used within the docker executables
+PKG_HASH:=2cd69e2cc67053300aa8d78988c92fd63ea0d0d84fe2071597191a149d5548f8
+PKG_GIT_SHORT_COMMIT:=f756502 # SHA1 used within the docker executables
 
 PKG_MAINTAINER:=Gerard Ryan <G.M0N3Y.2503@gmail.com>
 
@@ -33,9 +33,21 @@ define Package/dockerd
   CATEGORY:=Utilities
   TITLE:=Docker Community Edition Daemon
   URL:=https://www.docker.com/
-  DEPENDS:=$(GO_ARCH_DEPENDS) +btrfs-progs +ca-certificates +containerd +libdevmapper +libnetwork +tini \
-           +KERNEL_SECCOMP:libseccomp +iptables-mod-extra +kmod-br-netfilter +kmod-ikconfig +kmod-nf-conntrack-netlink +kmod-nf-ipvs \
-           +kmod-nf-nat +kmod-veth +iptables-legacy +iptables-mod-nat-extra
+  DEPENDS:=$(GO_ARCH_DEPENDS) \
+    +ca-certificates \
+    +containerd \
+    +iptables \
+    +iptables-mod-extra \
+    +IPV6:ip6tables \
+    +IPV6:kmod-ipt-nat6 \
+    +KERNEL_SECCOMP:libseccomp \
+    +kmod-ipt-nat \
+    +kmod-ipt-physdev \
+    +kmod-nf-ipvs \
+    +kmod-veth \
+    +libnetwork \
+    +tini \
+    +uci-firewall
   USERID:=docker:docker
   MENU:=1
 endef
@@ -132,8 +144,11 @@ define Package/dockerd/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bundles/binary-daemon/dockerd $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/opt/docker/
+
+  ifeq ($(CONFIG_DOCKER_CHECK_CONFIG),y)
 	$(INSTALL_DIR) $(1)/usr/share/docker/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/contrib/check-config.sh $(1)/usr/share/docker/
+  endif
 
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/dockerd.init $(1)/etc/init.d/dockerd
