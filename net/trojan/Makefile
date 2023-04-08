@@ -16,6 +16,7 @@ PKG_HASH:=86cdb2685bb03a63b62ce06545c41189952f1ec4a0cd9147450312ed70956cbc
 
 PKG_BUILD_PARALLEL:=1
 PKG_BUILD_DEPENDS:=openssl
+PKG_BUILD_FLAGS:=gc-sections lto
 
 PKG_LICENSE:=GPL-3.0
 PKG_LICENSE_FILES:=LICENSE
@@ -27,15 +28,9 @@ include $(INCLUDE_DIR)/cmake.mk
 TARGET_CXXFLAGS += -Wall -Wextra
 TARGET_CXXFLAGS += $(FPIC)
 
-# LTO
-TARGET_CXXFLAGS += -flto
-TARGET_LDFLAGS += -flto
-
 # CXX standard
 TARGET_CXXFLAGS += -std=c++11
 TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CXXFLAGS)) -O3
-TARGET_CXXFLAGS += -ffunction-sections -fdata-sections
-TARGET_LDFLAGS += -Wl,--gc-sections
 
 CMAKE_OPTIONS += \
 	-DENABLE_MYSQL=OFF \
