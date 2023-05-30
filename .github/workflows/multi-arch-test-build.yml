@@ -6,6 +6,10 @@ on:
       - master
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   build:
     name: Test ${{ matrix.arch }}
@@ -20,7 +24,7 @@ jobs:
 
           - arch: mips_24kc
             target: ath79-generic
-            runtime_test: false
+            runtime_test: true
 
           - arch: mipsel_24kc
             target: mt7621
@@ -89,6 +93,7 @@ jobs:
 
       - name: Generate build keys
         run: |
+          sudo apt-get update
           sudo apt-get install -y signify-openbsd
           signify-openbsd -G -n -c 'DO NOT USE - OpenWrt packages feed CI' -p packages_ci.pub -s packages_ci.sec
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
@@ -125,19 +130,32 @@ jobs:
       - name: Remove logs
         run: sudo rm -rf logs/ || true
 
-      - name: Register QEMU
-        if: ${{ matrix.runtime_test }}
+      - name: Check if any packages were built
         run: |
-          sudo docker run --rm --privileged aptman/qus -s -- -p
+          if [ -n "$(find . -maxdepth 1 -type f -name '*.ipk' -print -quit)" ]; then
+            echo "Found *.ipk files"
+            HAVE_IPKS=true
+          else
+            echo "No *.ipk files found"
+            HAVE_IPKS=false
+          fi
+          echo "HAVE_IPKS=$HAVE_IPKS" >> $GITHUB_ENV
+
+      - name: Register QEMU
+        if: ${{ matrix.runtime_test && fromJSON(env.HAVE_IPKS) }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static binfmt-support
+          sudo update-binfmts --import
 
       - name: Build Docker container
-        if: ${{ matrix.runtime_test }}
+        if: ${{ matrix.runtime_test && fromJSON(env.HAVE_IPKS) }}
         run: |
           docker build -t test-container --build-arg ARCH .github/workflows/
         env:
           ARCH: ${{ matrix.arch }}-${{ env.BRANCH }}
 
       - name: Test via Docker container
-        if: ${{ matrix.runtime_test }}
+        if: ${{ matrix.runtime_test && fromJSON(env.HAVE_IPKS) }}
         run: |
           docker run --rm -v $GITHUB_WORKSPACE:/ci test-container
