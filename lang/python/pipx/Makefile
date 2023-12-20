@@ -8,17 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pipx
-PKG_VERSION:=1.2.1
+PKG_VERSION:=1.3.3
 PKG_RELEASE:=1
 
 PYPI_NAME:=pipx
-PKG_HASH:=698777c05a97cca81df4dc6a71d9ca4ece2184c6f91dc7a0e4802ac51d86d32a
+PKG_HASH:=6d5474e71e78c28d83570443e5418c56599aa8319a950ccf5984c5cb0a35f0a7
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
 PKG_MAINTAINER:=Jeffery To <jeffery.to@gmail.com>
 
-PKG_BUILD_DEPENDS:=python-hatchling/host
+PKG_BUILD_DEPENDS:=python-hatchling/host python-hatch-vcs/host
 
 include ../pypi.mk
 include $(INCLUDE_DIR)/package.mk
@@ -29,7 +29,7 @@ define Package/pipx
   CATEGORY:=Languages
   SUBMENU:=Python
   TITLE:=Install/Run Python Applications in Isolated Environments
-  URL:=https://github.com/pypa/pipx
+  URL:=https://pipx.pypa.io/
   DEPENDS:= \
     +python3-light \
     +python3-logging \
@@ -37,6 +37,7 @@ define Package/pipx
     +python3-venv \
     +python3-argcomplete \
     +python3-packaging \
+    +python3-platformdirs \
     +python3-userpath
 endef
 

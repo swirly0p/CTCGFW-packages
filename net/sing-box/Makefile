@@ -5,12 +5,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sing-box
-PKG_VERSION:=1.7.1
+PKG_VERSION:=1.7.5
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/SagerNet/sing-box/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=e1a5d7c9a7f3a23da73f4d420aed19c8cc5f9b85af1e190fe9502658ec6fac3a
+PKG_HASH:=467373705604cb9cbf9c8363b0cec93aeb66b8de02742d96304f91181f5fbb5e
 
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=LICENSE
@@ -75,6 +75,7 @@ define Package/sing-box/config
 
     config SING_BOX_BUILD_ECH
     bool "Build with TLS ECH extension support"
+    default y
 
     config SING_BOX_BUILD_EMBEDDED_TOR
     bool "Build with embedded Tor support"
