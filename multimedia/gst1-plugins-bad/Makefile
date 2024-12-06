@@ -159,7 +159,7 @@ MESON_ARGS += \
 	-Dy4m=$(if $(CONFIG_PACKAGE_gst1-mod-y4mdec),en,dis)abled \
 	\
 	-Dopencv=disabled \
-	-Dwayland=disabled \
+	-Dwayland=$(if $(CONFIG_PACKAGE_libgst1gl),en,dis)abled \
 	-Dx11=disabled \
 	\
 	-Daom=disabled \
@@ -191,7 +191,7 @@ MESON_ARGS += \
 	-Dfdkaac=disabled \
 	-Dflite=disabled \
 	-Dfluidsynth=disabled \
-	-Dgl=disabled \
+	-Dgl=$(if $(CONFIG_PACKAGE_libgst1gl),en,dis)abled \
 	-Dgme=disabled \
 	-Dgpl=enabled \
 	-Dgsm=disabled \
@@ -428,7 +428,7 @@ $(eval $(call GstBuildPlugin,switchbin,switchbin support,,,))
 $(eval $(call GstBuildPlugin,timecode,timecode support,,,))
 $(eval $(call GstBuildPlugin,videofiltersbad,videofiltersbad support,,,))
 $(eval $(call GstBuildPlugin,videoframe_audiolevel,videoframe_audiolevel support,,,))
-#$(eval $(call GstBuildPlugin,videoparsersbad,videoparsersbad support,,,))
+$(eval $(call GstBuildPlugin,videoparsersbad,videoparsersbad support,codecparsers,,))
 $(eval $(call GstBuildPlugin,videosignal,videosignal support,,,))
 $(eval $(call GstBuildPlugin,vmnc,vmnc support,,,))
 $(eval $(call GstBuildPlugin,y4mdec,y4mdec support,,,))

@@ -78,7 +78,7 @@ jobs:
           for ROOT in $PKG_ROOTS; do
             for CHANGE in $CHANGES; do
               if [[ "$CHANGE" == "$ROOT"* ]]; then
-                PACKAGES+=$(echo "$ROOT" | sed -e 's@.*/\(.*\)/@\1 @')
+                PACKAGES+=$(echo "$ROOT" | sed -e 's@\(.*/\)*\(.*\)/@\2 @')
                 break
               fi
             done
@@ -112,7 +112,7 @@ jobs:
 
       - name: Move created packages to project dir
         if: always()
-        run: cp bin/packages/${{ matrix.arch }}/packages_ci/* . || true
+        run: cp -v bin/packages/${{ matrix.arch }}/packages_ci/* . || true
 
       - name: Store packages
         if: always()
@@ -123,6 +123,8 @@ jobs:
             Packages
             Packages.*
             *.ipk
+            packages.adb
+            *.apk
 
       - name: Store logs
         if: always()
