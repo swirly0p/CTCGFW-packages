@@ -6,7 +6,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=3proxy
 PKG_VERSION:=0.9.5
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/3proxy/3proxy/tar.gz/$(PKG_VERSION)?
@@ -54,6 +54,10 @@ endef
 define Package/3proxy/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/3proxy $(1)/usr/bin/3proxy
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_CONF) $(CURDIR)/files/3proxy.config $(1)/etc/config/3proxy
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) $(CURDIR)/files/3proxy.init $(1)/etc/init.d/3proxy
 endef
 
 # 1: library name
@@ -84,7 +88,7 @@ $(eval $(call 3proxyLibrary,pam,pamauth,+libpam,))
 $(eval $(call 3proxyLibrary,pcre,PCREPlugin,+libpcre2,This filtering plugin can be used to create matching and replace rules with regular expressions for client's request, client and servers header and client and server data.))
 $(eval $(call 3proxyLibrary,ssl,SSLPlugin,+libopenssl,This plugin can be used to decrypt and manupulate SSL/TLS traffic.))
 $(eval $(call 3proxyLibrary,strings,StringsPlugin,,Allows to change replies of HTTP proxy server.))
-$(eval $(call 3proxyLibrary,traffic,TrafficPlugin,,))
+$(eval $(call 3proxyLibrary,traffic,TrafficPlugin,,This plugin attempts to correct 3proxy computations to approximate network or link level traffic by using either fixed coefficients by port number or attempting to predict number and sizes of network packets.))
 $(eval $(call 3proxyLibrary,transparent,TransparentPlugin,,This plugin can be used to implement 3proxy transparently for client for any TCP-based protocols.))
 
 # 1: module name
