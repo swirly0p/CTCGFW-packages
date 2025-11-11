@@ -5,12 +5,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=smartdns
-PKG_VERSION:=47
-PKG_RELEASE:=4
+PKG_VERSION:=47.1
+PKG_RELEASE:=5
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/pymumu/smartdns/tar.gz/Release$(PKG_VERSION)?
-PKG_HASH:=90414fc46de16bdec69a8511d78616287db17c5cc20034c210978896dfa7530a
+PKG_HASH:=0a143ee81ccb7a31b7b7b0c29d6a6ee41a54331da75477719925592af124ec97
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-Release$(PKG_VERSION)
 
 PKG_MAINTAINER:=Nick Peng <pymumu@gmail.com>
@@ -72,9 +72,9 @@ endef
 define Download/smartdns-webui
   PROTO:=git
   URL:=https://github.com/pymumu/smartdns-webui.git
-  SOURCE_DATE:=2025-09-18
-  SOURCE_VERSION:=c322303eac2ebee389f4a72a002163552e552f74
-  MIRROR_HASH:=b239f3d994e05ad08356bf1be629cd84c2bfc6706997aafea881284cacc29545
+  SOURCE_DATE:=2025-10-25
+  SOURCE_VERSION:=a673732fd541bbd33e3677e6315cf8a9ce3bf248
+  MIRROR_HASH:=2dc08e54f36ba9427d628979494b44fc6963a51cbf3fb62b197f65c3e33a6095
   SUBDIR:=smartdns-webui-$$$$(subst -,.,$$$$(SOURCE_DATE))~$$$$(call version_abbrev,$$$$(SOURCE_VERSION))
   FILE:=$$(SUBDIR).tar.zst
 endef
@@ -97,7 +97,6 @@ ifneq ($(CONFIG_PACKAGE_smartdns-ui),)
 	( \
 		pushd $(PKG_BUILD_DIR) ; \
 		pushd smartdns-webui ; \
-		$(SED) 's/"\^/"/g' package.json ; \
 		npm install ; \
 		npm run build ; \
 		popd ; \
