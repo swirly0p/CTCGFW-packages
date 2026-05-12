@@ -13,7 +13,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=boost
 PKG_VERSION:=1.90.0
 PKG_SOURCE_VERSION:=1_90_0
-PKG_RELEASE:=1
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)_$(PKG_SOURCE_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://archives.boost.io/release/$(PKG_VERSION)/source @SF/$(PKG_NAME)/$(PKG_NAME)/$(PKG_VERSION)
@@ -79,7 +79,7 @@ This package provides the following run-time libraries:
  - wave
 
 There are many more header-only libraries supported by Boost.
-See more at http://www.boost.org/doc/libs/1_90_0/
+See more at https://www.boost.org/libraries/1.90.0/grid/
 endef
 
 PKG_BUILD_DEPENDS:=boost/host
@@ -336,7 +336,7 @@ define DefineBoostLibrary
 endef
 
 $(eval $(call DefineBoostLibrary,atomic))
-$(eval $(call DefineBoostLibrary,charconv,,,,libquadmath))
+$(eval $(call DefineBoostLibrary,charconv,,,,$(if $(filter i386 x86_64 powerpc powerpc64,$(ARCH)),libquadmath)))
 $(eval $(call DefineBoostLibrary,chrono))
 $(eval $(call DefineBoostLibrary,cobalt,container context date_time,,,libopenssl))
 $(eval $(call DefineBoostLibrary,container))
